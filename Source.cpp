@@ -14,6 +14,8 @@ using namespace std;
 
 char gameField[SIZE][SIZE] = { 0 };
 char movesField[SIZE][SIZE] = { 0 };
+char dangerFieldW[SIZE][SIZE] = { 0 };
+char dangerFieldB[SIZE][SIZE] = { 0 };
 
 char curFigure = ' ';
 COORD posOfCurFigure;
@@ -21,6 +23,7 @@ COORD whiteKingPos;
 COORD blackKingPos;
 bool turnOfWhite = true;
 bool turnOfBlack = false;
+bool isPeshkaCanMove = true;
 int n = 0;
 int m = 0;
 int waitingForStart = 0;
@@ -154,7 +157,7 @@ int determineTeam(char elem) {
 	if (elem == ' ') {
 		return 3;
 	}
-	char blackTeam[7] = { 'R','H','E','X','K','P' };
+	char blackTeam[6] = { 'R','H','E','X','K','P'};
 	char whiteTeam[6] = { 1,30,87,24,'7','8' };
 	int counter = 0;
 	for (int i = 0; i < 6; i++) {
@@ -162,7 +165,7 @@ int determineTeam(char elem) {
 			counter++;
 		}
 	}
-	if (counter != 0) {
+	if (counter == 1) {
 		return 1;
 	} else {
 		return 0;
@@ -191,64 +194,73 @@ bool isDifTeam(char fElem, char sElem) {
 	return true;
 }
 
-void markPossibleMoves(char mat[8][8], char output[8][8], COORD position, char element) {
+void markPossibleMoves(char mat[8][8], char output[8][8], COORD position, char element, char symbol) {
 	COORD temp = position;
 	if (element == 30 || element == 'P') {
-		
+
 		if (temp.X == 1 || temp.X == 6) {
 			if (temp.X == 1) {
-				if (gameField[temp.X + 1][temp.Y] == ' ') {
-					output[temp.X + 1][temp.Y] = '-';
-					
-					if (gameField[temp.X + 2][temp.Y] == ' ') {
-						output[temp.X + 2][temp.Y] = '-';
+				if (isPeshkaCanMove == true) {
+					if (gameField[temp.X + 1][temp.Y] == ' ') {
+						output[temp.X + 1][temp.Y] = symbol;
+
+						if (gameField[temp.X + 2][temp.Y] == ' ') {
+							output[temp.X + 2][temp.Y] = symbol;
+						}
 					}
 				}
 				if (isDifTeam(gameField[temp.X + 1][temp.Y + 1], gameField[temp.X][temp.Y]) == true && gameField[temp.X + 1][temp.Y + 1] != ' ' && temp.X + 1 < SIZE && temp.Y + 1 < SIZE) {
-					output[temp.X + 1][temp.Y + 1] = '-';
+					output[temp.X + 1][temp.Y + 1] = symbol;
 				}
 				if (isDifTeam(gameField[temp.X + 1][temp.Y - 1], gameField[temp.X][temp.Y]) == true && gameField[temp.X + 1][temp.Y - 1] != ' ' && temp.X + 1 < SIZE && temp.Y - 1 >= 0) {
-					output[temp.X + 1][temp.Y - 1] = '-';
+					output[temp.X + 1][temp.Y - 1] = symbol;
 				}
 			}
 
 			if (temp.X == 6) {
-				if (gameField[temp.X - 1][temp.Y] == ' ') {
-					output[temp.X - 1][temp.Y] = '-';
-					
-					if (gameField[temp.X - 2][temp.Y] == ' ') {
-						output[temp.X - 2][temp.Y] = '-';
+				if (isPeshkaCanMove == true) {
+					if (gameField[temp.X - 1][temp.Y] == ' ') {
+						output[temp.X - 1][temp.Y] = symbol;
+
+						if (gameField[temp.X - 2][temp.Y] == ' ') {
+							output[temp.X - 2][temp.Y] = symbol;
+						}
 					}
 				}
 				if (isDifTeam(gameField[temp.X - 1][temp.Y + 1], gameField[temp.X][temp.Y]) == true && gameField[temp.X - 1][temp.Y + 1] != ' ' && temp.X - 1 >= 0 && temp.Y + 1 < SIZE) {
-					output[temp.X - 1][temp.Y + 1] = '-';
+					output[temp.X - 1][temp.Y + 1] = symbol;
 				}
 				if (isDifTeam(gameField[temp.X - 1][temp.Y - 1], gameField[temp.X][temp.Y]) == true && gameField[temp.X - 1][temp.Y - 1] != ' ' && temp.X - 1 >= 0 && temp.Y - 1 >= 0) {
-					output[temp.X - 1][temp.Y - 1] = '-';
+					output[temp.X - 1][temp.Y - 1] = symbol;
 				}
 			}
-		} else {
+		}
+		else {
 			if (element == 30) {
-				if (gameField[temp.X - 1][temp.Y] == ' ') {
-					output[temp.X - 1][temp.Y] = '-';
+				if (isPeshkaCanMove == true) {
+					if (gameField[temp.X - 1][temp.Y] == ' ') {
+						output[temp.X - 1][temp.Y] = symbol;
+					}
 				}
 				if (isDifTeam(gameField[temp.X - 1][temp.Y + 1], gameField[temp.X][temp.Y]) == true && gameField[temp.X - 1][temp.Y + 1] != ' ' && temp.X - 1 >= 0 && temp.Y + 1 < SIZE) {
-					output[temp.X - 1][temp.Y + 1] = '-';
+					output[temp.X - 1][temp.Y + 1] = symbol;
 				}
 				if (isDifTeam(gameField[temp.X - 1][temp.Y - 1], gameField[temp.X][temp.Y]) == true && gameField[temp.X - 1][temp.Y - 1] != ' ' && temp.X - 1 >= 0 && temp.Y - 1 >= 0) {
-					output[temp.X - 1][temp.Y - 1] = '-';
+					output[temp.X - 1][temp.Y - 1] = symbol;
 				}
 			}
 
 			if (element == 'P') {
-				if (gameField[temp.X + 1][temp.Y] == ' ') {
-					output[temp.X + 1][temp.Y] = '-';
+				if (isPeshkaCanMove == true) {
+					if (gameField[temp.X + 1][temp.Y] == ' ') {
+						output[temp.X + 1][temp.Y] = symbol;
+					}
 				}
 				if (isDifTeam(gameField[temp.X + 1][temp.Y + 1], gameField[temp.X][temp.Y]) == true && gameField[temp.X + 1][temp.Y + 1] != ' ' && temp.X + 1 < SIZE && temp.Y + 1 < SIZE) {
-					output[temp.X + 1][temp.Y + 1] = '-';
+					output[temp.X + 1][temp.Y + 1] = symbol;
 				}
 				if (isDifTeam(gameField[temp.X + 1][temp.Y - 1], gameField[temp.X][temp.Y]) == true && gameField[temp.X + 1][temp.Y - 1] != ' ' && temp.X + 1 < SIZE && temp.Y - 1 >= 0) {
-					output[temp.X + 1][temp.Y - 1] = '-';
+					output[temp.X + 1][temp.Y - 1] = symbol;
 				}
 			}
 		}
@@ -260,135 +272,135 @@ void markPossibleMoves(char mat[8][8], char output[8][8], COORD position, char e
 		temp.X--;
 		temp.Y++;
 		while (gameField[temp.X][temp.Y] == ' ' && temp.X >= 0 && temp.Y < SIZE) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.X--;
 			temp.Y++;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.X >= 0 && temp.Y < SIZE) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 		temp = save;
 		temp.X--;
 		temp.Y--;
 		while (gameField[temp.X][temp.Y] == ' ' && temp.X >= 0 && temp.Y >= 0) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.X--;
 			temp.Y--;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.X >= 0 && temp.Y >= 0) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 		temp = save;
 		temp.X++;
 		temp.Y--;
 		while (gameField[temp.X][temp.Y] == ' ' && temp.X < SIZE && temp.Y >= 0) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.X++;
 			temp.Y--;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.X < SIZE && temp.Y >= 0) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 		temp = save;
 		temp.X++;
 		temp.Y++;
 		while (gameField[temp.X][temp.Y] == ' ' && temp.X < SIZE && temp.Y < SIZE) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.X++;
 			temp.Y++;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.X < SIZE && temp.Y < SIZE) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 	}
 	if (element == '8' || element == 82) {
 		COORD save = temp;
 		temp.X--;
 		while (gameField[temp.X][temp.Y] == ' ') {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.X--;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.X >= 0) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 		temp = save;
 		temp.X++;
 		while (gameField[temp.X][temp.Y] == ' ') {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.X++;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.X < SIZE) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 		temp = save;
 		temp.Y--;
 		while (gameField[temp.X][temp.Y] == ' ' && temp.Y >= 0) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.Y--;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.Y >= 0) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 		temp = save;
 		temp.Y++;
 		while (gameField[temp.X][temp.Y] == ' ' && temp.Y <= 7) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.Y++;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.Y < SIZE) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 	}
 	if (element == '7' || element == 'H') {
 		if (isDifTeam(gameField[temp.X - 2][temp.Y - 1], gameField[temp.X][temp.Y]) == true && temp.X - 2 >= 0 && temp.Y - 1 >= 0) {
-			output[temp.X - 2][temp.Y - 1] = '-';
+			output[temp.X - 2][temp.Y - 1] = symbol;
 		}
 		if (isDifTeam(gameField[temp.X - 2][temp.Y + 1], gameField[temp.X][temp.Y]) == true && temp.X - 2 >= 0 && temp.Y + 1 < SIZE) {
-			output[temp.X - 2][temp.Y + 1] = '-';
+			output[temp.X - 2][temp.Y + 1] = symbol;
 		}
 		if (isDifTeam(gameField[temp.X + 2][temp.Y + 1], gameField[temp.X][temp.Y]) == true && temp.X + 2 < SIZE && temp.Y + 1 < SIZE) {
-			output[temp.X + 2][temp.Y + 1] = '-';
+			output[temp.X + 2][temp.Y + 1] = symbol;
 		}
 		if (isDifTeam(gameField[temp.X + 2][temp.Y - 1], gameField[temp.X][temp.Y]) == true && temp.X + 2 < SIZE && temp.Y - 1 >= 0) {
-			output[temp.X + 2][temp.Y - 1] = '-';
+			output[temp.X + 2][temp.Y - 1] = symbol;
 		}
 		if (isDifTeam(gameField[temp.X - 1][temp.Y + 2], gameField[temp.X][temp.Y]) == true && temp.X - 1 >= 0 && temp.Y + 2 < SIZE) {
-			output[temp.X - 1][temp.Y + 2] = '-';
+			output[temp.X - 1][temp.Y + 2] = symbol;
 		}
 		if (isDifTeam(gameField[temp.X + 1][temp.Y + 2], gameField[temp.X][temp.Y]) == true && temp.X + 1 < SIZE && temp.Y + 2 < SIZE) {
-			output[temp.X + 1][temp.Y + 2] = '-';
+			output[temp.X + 1][temp.Y + 2] = symbol;
 		}
 		if (isDifTeam(gameField[temp.X - 1][temp.Y - 2], gameField[temp.X][temp.Y]) == true && temp.X - 1 >= 0 && temp.Y - 2 >= 0) {
-			output[temp.X - 1][temp.Y - 2] = '-';
+			output[temp.X - 1][temp.Y - 2] = symbol;
 		}
 		if (isDifTeam(gameField[temp.X + 1][temp.Y - 2], gameField[temp.X][temp.Y]) == true && temp.X + 1 < SIZE && temp.Y - 2 >= 0) {
-			output[temp.X + 1][temp.Y - 2] = '-';
+			output[temp.X + 1][temp.Y - 2] = symbol;
 		}
 	}
 	if (element == 1 || element == 'K') {
 		if (isDifTeam(gameField[temp.X - 1][temp.Y - 1], gameField[temp.X][temp.Y]) == true && temp.X - 1 >= 0 && temp.Y - 1 >= 0) {
-			output[temp.X - 1][temp.Y - 1] = '-';
+			output[temp.X - 1][temp.Y - 1] = symbol;
 		}
 		if (isDifTeam(gameField[temp.X - 1][temp.Y + 1], gameField[temp.X][temp.Y]) == true && temp.X - 1 >= 0 && temp.Y + 1 < SIZE) {
-			output[temp.X - 1][temp.Y + 1] = '-';
+			output[temp.X - 1][temp.Y + 1] = symbol;
 		}
 		if (isDifTeam(gameField[temp.X + 1][temp.Y + 1], gameField[temp.X][temp.Y]) == true && temp.X + 1 < SIZE && temp.Y + 1 < SIZE) {
-			output[temp.X + 1][temp.Y + 1] = '-';
+			output[temp.X + 1][temp.Y + 1] = symbol;
 		}
 		if (isDifTeam(gameField[temp.X + 1][temp.Y - 1], gameField[temp.X][temp.Y]) == true && temp.X + 1 < SIZE && temp.Y - 1 >= 0) {
-			output[temp.X + 1][temp.Y - 1] = '-';
+			output[temp.X + 1][temp.Y - 1] = symbol;
 		}
 		if (isDifTeam(gameField[temp.X - 1][temp.Y], gameField[temp.X][temp.Y]) == true && temp.X - 1 >= 0) {
-			output[temp.X - 1][temp.Y] = '-';
+			output[temp.X - 1][temp.Y] = symbol;
 		}
 		if (isDifTeam(gameField[temp.X + 1][temp.Y], gameField[temp.X][temp.Y]) == true && temp.X + 1 < SIZE) {
-			output[temp.X + 1][temp.Y] = '-';
+			output[temp.X + 1][temp.Y] = symbol;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y - 1], gameField[temp.X][temp.Y]) == true && temp.Y - 1 >= 0) {
-			output[temp.X][temp.Y - 1] = '-';
+			output[temp.X][temp.Y - 1] = symbol;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y + 1], gameField[temp.X][temp.Y]) == true && temp.Y + 1 < SIZE) {
-			output[temp.X][temp.Y + 1] = '-';
+			output[temp.X][temp.Y + 1] = symbol;
 		}
 	}
 	if (element == 'X' || element == 'W') {
@@ -396,90 +408,91 @@ void markPossibleMoves(char mat[8][8], char output[8][8], COORD position, char e
 		temp.X--;
 		temp.Y++;
 		while (gameField[temp.X][temp.Y] == ' ' && temp.X >= 0 && temp.Y < SIZE) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.X--;
 			temp.Y++;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.X >= 0 && temp.Y < SIZE) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 		temp = save;
 		temp.X--;
 		temp.Y--;
 		while (gameField[temp.X][temp.Y] == ' ' && temp.X >= 0 && temp.Y >= 0) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.X--;
 			temp.Y--;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.X >= 0 && temp.Y >= 0) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 		temp = save;
 		temp.X++;
 		temp.Y--;
 		while (gameField[temp.X][temp.Y] == ' ' && temp.X < SIZE && temp.Y >= 0) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.X++;
 			temp.Y--;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.X < SIZE && temp.Y >= 0) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 		temp = save;
 		temp.X++;
 		temp.Y++;
 		while (gameField[temp.X][temp.Y] == ' ' && temp.X < SIZE && temp.Y < SIZE) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.X++;
 			temp.Y++;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.X < SIZE && temp.Y < SIZE) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 		temp = save;
 		temp.X--;
 		while (gameField[temp.X][temp.Y] == ' ') {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.X--;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.X >= 0) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 		temp = save;
 		temp.X++;
 		while (gameField[temp.X][temp.Y] == ' ') {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.X++;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.X < SIZE) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 		temp = save;
 		temp.Y--;
 		while (gameField[temp.X][temp.Y] == ' ' && temp.Y >= 0) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.Y--;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.Y >= 0) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 		temp = save;
 		temp.Y++;
 		while (gameField[temp.X][temp.Y] == ' ' && temp.Y <= 7) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 			temp.Y++;
 		}
 		if (isDifTeam(gameField[temp.X][temp.Y], gameField[save.X][save.Y]) == true && temp.Y < SIZE) {
-			output[temp.X][temp.Y] = '-';
+			output[temp.X][temp.Y] = symbol;
 		}
 	}
+
 }
 
-void clearGameField() {
+void clearGameField(char field[8][8]) {
 	for (int i = 0; i < SIZE; i++) {
 		for (int j = 0; j < SIZE; j++) {
-			if (movesField[i][j] == '-') {
-				movesField[i][j] = ' ';
+			if (field[i][j] == '*' || field[i][j] == '-') {
+				field[i][j] = ' ';
 			}
 		}
 	}
@@ -512,25 +525,34 @@ void playerCommands() {
 	}
 }
 
-bool whiteCheckMate() {
-	char dangerFieldW[SIZE][SIZE] = { 0 };
-	for (int i = 0; i < SIZE; i++) {
-		for (int j = 0; j < SIZE; j++) {
-			/*cout << i << "-" << j << "\n";*/
-			if (determineTeam(gameField[i][j]) == 1) {
-				COORD tempPos;
-				tempPos.X = i;
-				tempPos.Y = j;
-				markPossibleMoves(gameField, dangerFieldW,tempPos,gameField[i][j]);
-				dangerFieldW[i][j] = '-';
-			} else if (gameField[i][j] != ' '){
-				dangerFieldW[i][j] = '*';
+bool whiteCheckMate(int style) {
+	if (style == 0) {
+		clearGameField(dangerFieldW);
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < SIZE; j++) {
+
+				if (determineTeam(gameField[i][j]) == 1) {
+					COORD tempPos;
+					tempPos.X = i;
+					tempPos.Y = j;
+					isPeshkaCanMove = false;
+					markPossibleMoves(gameField, dangerFieldW, tempPos, gameField[i][j], '-');
+					isPeshkaCanMove = true;
+					dangerFieldW[i][j] = '-';
+				}
+				else if (gameField[i][j] != ' ' && gameField[i][j] != 1) {
+					dangerFieldW[i][j] = '*';
+				}
 			}
 		}
 	}
 	int counter = 0;
 	int spareCounter = 0;
-
+	if (dangerFieldW[whiteKingPos.X][whiteKingPos.Y] == '-') {
+		return true;
+	} else {
+		return false;
+	}
 		if (dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y - 1] == '-' || dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y - 1] == '*' || whiteKingPos.X - 1 < 0 || whiteKingPos.Y - 1 < 0) {
 			counter++;
 			if (dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y - 1] == '*' || whiteKingPos.X - 1 < 0 || whiteKingPos.Y - 1 < 0) {
@@ -579,7 +601,7 @@ bool whiteCheckMate() {
 				spareCounter++;
 			}
 		}
-	/*	cout << counter << "-" << spareCounter;*/
+	
 		if (counter == spareCounter) {
 			return false;
 		}
@@ -590,26 +612,38 @@ bool whiteCheckMate() {
 		return false;
 }
 
-bool blackCheckMate() {
-	char dangerFieldB[SIZE][SIZE] = { 0 };
+bool blackCheckMate(int style) {
+	if (style == 0) {
+		clearGameField(dangerFieldB);
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < SIZE; j++) {
+
+				if (determineTeam(gameField[i][j]) == 0) {
+					COORD tempPos;
+					tempPos.X = i;
+					tempPos.Y = j;
+					isPeshkaCanMove = false;
+					markPossibleMoves(gameField, dangerFieldB, tempPos, gameField[i][j], '-');
+					isPeshkaCanMove = true;
+					dangerFieldB[i][j] = '-';
+				} 
+			}
+		}
+	}
 	for (int i = 0; i < SIZE; i++) {
 		for (int j = 0; j < SIZE; j++) {
-			
-			if (determineTeam(gameField[i][j]) == 0) {
-				COORD tempPos;
-				tempPos.X = i;
-				tempPos.Y = j;
-				markPossibleMoves(gameField, dangerFieldB, tempPos, gameField[i][j]);
-				dangerFieldB[i][j] = '-';
-			}
-			else if (gameField[i][j] != ' ') {
+			if (gameField[i][j] != ' ' && gameField[i][j] != 'K') {
 				dangerFieldB[i][j] = '*';
 			}
 		}
 	}
 	int counter = 0;
 	int spareCounter = 0;
-
+	if (dangerFieldB[blackKingPos.X][blackKingPos.Y] == '-') {
+		return true;
+	} else {
+		return false;
+	}
 	if (dangerFieldB[blackKingPos.X - 1][blackKingPos.Y - 1] == '-' || dangerFieldB[blackKingPos.X - 1][blackKingPos.Y - 1] == '*' || blackKingPos.X - 1 < 0 || blackKingPos.Y - 1 < 0) {
 		counter++;
 		if (dangerFieldB[blackKingPos.X - 1][blackKingPos.Y - 1] == '*' || blackKingPos.X - 1 < 0 || blackKingPos.Y - 1 < 0) {
@@ -658,7 +692,7 @@ bool blackCheckMate() {
 			spareCounter++;
 		}
 	}
-		
+	/*cout << "                                         "<< n << m;*/
 	if (counter == spareCounter) {
 		return false;
 	}
@@ -667,8 +701,71 @@ bool blackCheckMate() {
 
 	}
 	return false;
+
 }
 
+void isAnyPossibilitiesW() {
+	for (int i = 0; i < SIZE; i++) {
+		for (int j = 0; j < SIZE; j++) {
+
+			if (determineTeam(gameField[i][j]) == 0) {
+				COORD tempPos;
+				tempPos.X = i;
+				tempPos.Y = j;
+				markPossibleMoves(gameField, dangerFieldW, tempPos, gameField[i][j], '*');
+				dangerFieldW[i][j] = '*';
+			}
+		}
+	}
+}
+
+void isAnyPossibilitiesB() {
+	for (int i = 0; i < SIZE; i++) {
+		for (int j = 0; j < SIZE; j++) {
+
+			if (determineTeam(gameField[i][j]) == 1) {
+				COORD tempPos;
+				tempPos.X = i;
+				tempPos.Y = j;
+				markPossibleMoves(gameField, dangerFieldB, tempPos, gameField[i][j], '*');
+				dangerFieldW[i][j] = '*';
+			}
+		}
+	}
+}
+
+void canWeEatDangerW() {
+	for (int i = 0; i < SIZE; i++) {
+		for (int j = 0; j < SIZE; j++) {
+			if (determineTeam(gameField[i][j]) == 1) {
+				if (dangerFieldB[i][j] == '*') {
+					COORD tempPos;
+					tempPos.X = i;
+					tempPos.Y = j;
+					markPossibleMoves(gameField, dangerFieldB, tempPos, gameField[i][j], '*');
+					dangerFieldW[i][j] = '*';
+				}
+			}
+		}
+	}
+}
+
+void canWeEatDangerB() {
+	for (int i = 0; i < SIZE; i++) {
+		for (int j = 0; j < SIZE; j++) {
+
+			if (determineTeam(gameField[i][j]) == 0) {
+				if (dangerFieldB[i][j] == '*') {
+					COORD tempPos;
+					tempPos.X = i;
+					tempPos.Y = j;
+					markPossibleMoves(gameField, dangerFieldW, tempPos, gameField[i][j], '*');
+					dangerFieldW[i][j] = '*';
+				}
+			}
+		}
+	}
+}
 
 void playerInput() {
 	switch (_getch()) {
@@ -711,7 +808,7 @@ void playerInput() {
 				   posOfCurFigure.X = n;
 				   posOfCurFigure.Y = m;
 				   curFigure = gameField[n][m];
-				   markPossibleMoves(gameField,movesField,posOfCurFigure,curFigure);
+				   markPossibleMoves(gameField,movesField,posOfCurFigure,curFigure,'-');
 
 				   if (isNoPosMoves() == true) {
 					   cout << "No possible moves, chose another figure";
@@ -726,7 +823,7 @@ void playerInput() {
 				   posOfCurFigure.X = n;
 				   posOfCurFigure.Y = m;
 				   curFigure = gameField[n][m];
-				   markPossibleMoves(gameField, movesField,posOfCurFigure,curFigure);
+				   markPossibleMoves(gameField, movesField,posOfCurFigure,curFigure,'-');
 				   if (isNoPosMoves() == true) {
 					   cout << "No possible moves, chose another figure";
 					   swap(turnOfBlack, turnOfWhite);
@@ -746,7 +843,7 @@ void playerInput() {
 		   if (movesField[n][m] == '-') {
 			   gameField[n][m] = gameField[posOfCurFigure.X][posOfCurFigure.Y];
 			   gameField[posOfCurFigure.X][posOfCurFigure.Y] = ' ';
-			   clearGameField();
+			   clearGameField(movesField);
 			   curFigure = ' ';
 			   if (gameField[n][m] == 1) {
 				   whiteKingPos.X = n;
@@ -760,13 +857,18 @@ void playerInput() {
 			   cout << "You can not move figure there\n";
 		   }
 		   break;
+	   case('F'):
+	   case('f'):
+		   n = 0;
+		   m = 0;
+		   break;
 	   defult:
 		   cout << "Unknown input";
 		   break;
 	}
 }
 
-int saveKing(int tempCount) {
+void saveKing() {
 	switch (_getch()) {
 	case('w'):
 	case('W'):
@@ -806,7 +908,7 @@ int saveKing(int tempCount) {
 				posOfCurFigure.X = n;
 				posOfCurFigure.Y = m;
 				curFigure = gameField[n][m];
-				markPossibleMoves(gameField, movesField, posOfCurFigure, curFigure);
+				markPossibleMoves(gameField, movesField, posOfCurFigure, curFigure,'-');
 
 				if (isNoPosMoves() == true) {
 					cout << "No possible moves, chose another figure";
@@ -817,7 +919,7 @@ int saveKing(int tempCount) {
 				posOfCurFigure.X = n;
 				posOfCurFigure.Y = m;
 				curFigure = gameField[n][m];
-				markPossibleMoves(gameField, movesField, posOfCurFigure, curFigure);
+				markPossibleMoves(gameField, movesField, posOfCurFigure, curFigure,'-');
 				if (isNoPosMoves() == true) {
 					cout << "No possible moves, chose another figure";
 					curFigure = ' ';
@@ -835,18 +937,37 @@ int saveKing(int tempCount) {
 	case('p'):
 	case('P'):
 		if (movesField[n][m] == '-') {
+			COORD oldKingpos;
+			if (blackCheckMate(0)) {
+				oldKingpos = blackKingPos;
+			} else {
+				oldKingpos = whiteKingPos;
+			}
 			char save = gameField[n][m];
 			gameField[n][m] = gameField[posOfCurFigure.X][posOfCurFigure.Y];
 			gameField[posOfCurFigure.X][posOfCurFigure.Y] = ' ';
-			if (blackCheckMate() || whiteCheckMate()) {
+			if (gameField[n][m] == 1) {
+				whiteKingPos.X = n;
+				whiteKingPos.Y = m;
+			}
+			if (gameField[n][m] == 'K') {
+				blackKingPos.X = n;
+				blackKingPos.Y = m;
+			}
+			if (blackCheckMate(0) || whiteCheckMate(0)) {
 				gameField[posOfCurFigure.X][posOfCurFigure.Y] = gameField[n][m];
 				gameField[n][m] = save;
+				if (blackCheckMate(0)) {
+					blackKingPos = oldKingpos;
+				} else {
+					whiteKingPos = oldKingpos;
+				}
 				cout << "Do another move!";
-				tempCount++;
+			
 			} else {
 				swap(turnOfBlack, turnOfWhite);
 			}
-			clearGameField();
+			clearGameField(movesField);
 			curFigure = ' ';
 			if (gameField[n][m] == 1) {
 				whiteKingPos.X = n;
@@ -862,15 +983,11 @@ int saveKing(int tempCount) {
 			cout << "You can not move figure there\n";
 		}
 		break;
-	case('f'):
-	case('F'):
-		tempCount = 9;
-		break;
 	defult:
 		cout << "Unknown input";
 		break;
 	}
-	return tempCount;
+	
 }
 
 int main() {
@@ -881,6 +998,7 @@ int main() {
 	for (int i = 0; i < SIZE; i++) {
 		for (int j = 0; j < SIZE; j++) {
 			gameField[i][j] = ' ';
+			dangerFieldB[i][j] = ' ';
 		}
 	}
 	
@@ -893,10 +1011,47 @@ int main() {
 
 	bool endOfGameW = false;
 	bool endOfGameB = false;
-	while (true && endOfGameW !=true && endOfGameB != true) {
+	while (endOfGameW !=true && endOfGameB != true) {
 		drawGameField();
+		
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < SIZE; j++) {
+				cout << dangerFieldB[i][j];
+			}
+			cout << "\n";
+		}
 		playerInput();
-		if (blackCheckMate()) {
+		if (blackCheckMate(0)) {
+			isAnyPossibilitiesB();
+			/*canWeEatDangerB();*/
+			cout << "\n";
+			for (int i = 0; i < SIZE; i++) {
+				for (int j = 0; j < SIZE; j++) {
+					cout << dangerFieldB[i][j];
+				}
+				cout << "\n";
+			}
+			system("pause");
+			if (blackCheckMate(1)) {
+				endOfGameB = true;
+			} else {
+				drawGameField();
+				cout << "Black king is in danger\n";
+				saveKing();
+			}
+		}
+		if (whiteCheckMate(0)) {
+			isAnyPossibilitiesW();
+			/*canWeEatDangerW();*/
+			if (whiteCheckMate(1)) {
+				endOfGameW = true;
+			} else {
+				drawGameField();
+				cout << "White king is in danger\n";
+				saveKing();
+			}
+		}
+		/*if (blackCheckMate()) {
 			int tryCounter = 0;
 			while (blackCheckMate() && tryCounter < 9) {
 				drawGameField();
@@ -919,7 +1074,7 @@ int main() {
 			if (tryCounter > 8) {
 				endOfGameW = true;
 			}
-		}
+		}*/
 	}
 	/*wchar_t temp[] =L"π";
 	wchar_t temp2 = L'↑';
@@ -940,3 +1095,4 @@ int main() {
 // Выделить в отдельную функцию ход повторяющийся для белых и чёрных
 // Добавить условие окончания игры -> исправить условия окончания игры
 // Пофиксить канибализм среди чёрных пешек - !
+// Добавить, что короля съесть нельзя

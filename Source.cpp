@@ -778,7 +778,7 @@ void playerInput() {
 				   cout << "Not your turn or figure";
 			   }
 		   } else {
-			   cout << "You already choose some figure";
+			   cout << "You already choose some figure!";
 		   }
 		   break;
 	   case('p'):

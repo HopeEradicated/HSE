@@ -547,64 +547,36 @@ bool whiteCheckMate(int style) {
 		}
 	}
 	int counter = 0;
-	int spareCounter = 0;
+	
 	if (dangerFieldW[whiteKingPos.X][whiteKingPos.Y] == '-') {
 		return true;
-	} else {
-		return false;
-	}
-		if (dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y - 1] == '-' || dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y - 1] == '*' || whiteKingPos.X - 1 < 0 || whiteKingPos.Y - 1 < 0) {
+	} 
+		if (dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y - 1] == '-'  || whiteKingPos.X - 1 < 0 || whiteKingPos.Y - 1 < 0) {
 			counter++;
-			if (dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y - 1] == '*' || whiteKingPos.X - 1 < 0 || whiteKingPos.Y - 1 < 0) {
-				spareCounter++;
-			}
 		}
-		if (dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y + 1] == '-' || dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y + 1] == '*' || whiteKingPos.X - 1 < 0 || whiteKingPos.Y + 1 >= SIZE) {
+		if (dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y + 1] == '-' || whiteKingPos.X - 1 < 0 || whiteKingPos.Y + 1 >= SIZE) {
 			counter++;
-			if (dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y + 1] == '*' || whiteKingPos.X - 1 < 0 || whiteKingPos.Y + 1 >= SIZE) {
-				spareCounter++;
-			}
 		}
-		if (dangerFieldW[whiteKingPos.X + 1][whiteKingPos.Y + 1] == '-' || dangerFieldW[whiteKingPos.X + 1][whiteKingPos.Y + 1] == '*' || whiteKingPos.X + 1 >= SIZE || whiteKingPos.Y + 1 >= SIZE) {
+		if (dangerFieldW[whiteKingPos.X + 1][whiteKingPos.Y + 1] == '-' || whiteKingPos.X + 1 >= SIZE || whiteKingPos.Y + 1 >= SIZE) {
 			counter++;
-			if (dangerFieldW[whiteKingPos.X + 1][whiteKingPos.Y + 1] == '*' || whiteKingPos.X + 1 >= SIZE || whiteKingPos.Y + 1 >= SIZE) {
-				spareCounter++;
-			}
 		}
-		if (dangerFieldW[whiteKingPos.X + 1][whiteKingPos.Y - 1] == '-' || dangerFieldW[whiteKingPos.X + 1][whiteKingPos.Y - 1] == '*' || whiteKingPos.X + 1 >= SIZE || whiteKingPos.Y - 1 < 0) {
+		if (dangerFieldW[whiteKingPos.X + 1][whiteKingPos.Y - 1] == '-' || whiteKingPos.X + 1 >= SIZE || whiteKingPos.Y - 1 < 0) {
 			counter++;
-			if (dangerFieldW[whiteKingPos.X + 1][whiteKingPos.Y - 1] == '*' || whiteKingPos.X + 1 >= SIZE || whiteKingPos.Y - 1 < 0) {
-				spareCounter++;
-			}
 		}
-		if (dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y] == '-' || dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y] == '*' || whiteKingPos.X - 1 < 0) {
+		if (dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y] == '-' || whiteKingPos.X - 1 < 0) {
 			counter++;
-			if (dangerFieldW[whiteKingPos.X - 1][whiteKingPos.Y] == '*' || whiteKingPos.X - 1 < 0) {
-				spareCounter++;
-			}
+			
 		}
-		if (dangerFieldW[whiteKingPos.X + 1][whiteKingPos.Y] == '-' || dangerFieldW[whiteKingPos.X + 1][whiteKingPos.Y] == '*' || whiteKingPos.X + 1 >= SIZE) {
+		if (dangerFieldW[whiteKingPos.X + 1][whiteKingPos.Y] == '-'  || whiteKingPos.X + 1 >= SIZE) {
 			counter++;
-			if (dangerFieldW[whiteKingPos.X + 1][whiteKingPos.Y] == '*' || whiteKingPos.X + 1 >= SIZE) {
-				spareCounter++;
-			}
 		}
-		if (dangerFieldW[whiteKingPos.X][whiteKingPos.Y - 1] == '-' || dangerFieldW[whiteKingPos.X][whiteKingPos.Y - 1] == '*' || whiteKingPos.Y - 1 < 0) {
+		if (dangerFieldW[whiteKingPos.X][whiteKingPos.Y - 1] == '-'  || whiteKingPos.Y - 1 < 0) {
 			counter++;
-			if (dangerFieldW[whiteKingPos.X][whiteKingPos.Y - 1] == '*' || whiteKingPos.Y - 1 < 0) {
-				spareCounter++;
-			}
 		}
-		if (dangerFieldW[whiteKingPos.X][whiteKingPos.Y + 1] == '-' || dangerFieldW[whiteKingPos.X][whiteKingPos.Y + 1] == '*' || whiteKingPos.Y + 1 >= SIZE) {
+		if (dangerFieldW[whiteKingPos.X][whiteKingPos.Y + 1] == '-'  || whiteKingPos.Y + 1 >= SIZE) {
 			counter++;
-			if (dangerFieldW[whiteKingPos.X][whiteKingPos.Y + 1] == '*' || whiteKingPos.Y + 1 >= SIZE) {
-				spareCounter++;
-			}
 		}
 	
-		if (counter == spareCounter) {
-			return false;
-		}
 		if (counter == 8) {
 			return true;
 		
@@ -638,64 +610,35 @@ bool blackCheckMate(int style) {
 		}
 	}
 	int counter = 0;
-	int spareCounter = 0;
+	
 	if (dangerFieldB[blackKingPos.X][blackKingPos.Y] == '-') {
 		return true;
-	} else {
-		return false;
-	}
-	if (dangerFieldB[blackKingPos.X - 1][blackKingPos.Y - 1] == '-' || dangerFieldB[blackKingPos.X - 1][blackKingPos.Y - 1] == '*' || blackKingPos.X - 1 < 0 || blackKingPos.Y - 1 < 0) {
+	} 
+	if (dangerFieldB[blackKingPos.X - 1][blackKingPos.Y - 1] == '-' || blackKingPos.X - 1 < 0 || blackKingPos.Y - 1 < 0) {
 		counter++;
-		if (dangerFieldB[blackKingPos.X - 1][blackKingPos.Y - 1] == '*' || blackKingPos.X - 1 < 0 || blackKingPos.Y - 1 < 0) {
-			spareCounter++;
-		}
 	}
-	if (dangerFieldB[blackKingPos.X - 1][blackKingPos.Y + 1] == '-' || dangerFieldB[blackKingPos.X - 1][blackKingPos.Y + 1] == '*' || blackKingPos.X - 1 < 0 || blackKingPos.Y + 1 >= SIZE) {
+	if (dangerFieldB[blackKingPos.X - 1][blackKingPos.Y + 1] == '-' || blackKingPos.X - 1 < 0 || blackKingPos.Y + 1 >= SIZE) {
 		counter++;
-		if (dangerFieldB[blackKingPos.X - 1][blackKingPos.Y + 1] == '*' || blackKingPos.X - 1 < 0 || blackKingPos.Y + 1 >= SIZE) {
-			spareCounter++;
-		}
 	}
-	if (dangerFieldB[blackKingPos.X + 1][blackKingPos.Y + 1] == '-' || dangerFieldB[blackKingPos.X + 1][blackKingPos.Y + 1] == '*' || blackKingPos.X + 1 >= SIZE || blackKingPos.Y + 1 >= SIZE) {
+	if (dangerFieldB[blackKingPos.X + 1][blackKingPos.Y + 1] == '-' || blackKingPos.X + 1 >= SIZE || blackKingPos.Y + 1 >= SIZE) {
 		counter++;
-		if (dangerFieldB[blackKingPos.X + 1][blackKingPos.Y + 1] == '*' || blackKingPos.X + 1 >= SIZE || blackKingPos.Y + 1 >= SIZE) {
-			spareCounter++;
-		}
 	}
-	if (dangerFieldB[blackKingPos.X + 1][blackKingPos.Y - 1] == '-' || dangerFieldB[blackKingPos.X + 1][blackKingPos.Y - 1] == '*' || blackKingPos.X + 1 >= SIZE || blackKingPos.Y - 1 < 0) {
+	if (dangerFieldB[blackKingPos.X + 1][blackKingPos.Y - 1] == '-' || blackKingPos.X + 1 >= SIZE || blackKingPos.Y - 1 < 0) {
 		counter++;
-		if (dangerFieldB[blackKingPos.X + 1][blackKingPos.Y - 1] == '*' || blackKingPos.X + 1 >= SIZE || blackKingPos.Y - 1 < 0) {
-			spareCounter++;
-		}
 	}
-	if (dangerFieldB[blackKingPos.X - 1][blackKingPos.Y] == '-' || dangerFieldB[blackKingPos.X - 1][blackKingPos.Y] == '*' || blackKingPos.X - 1 < 0) {
+	if (dangerFieldB[blackKingPos.X - 1][blackKingPos.Y] == '-' || blackKingPos.X - 1 < 0) {
 		counter++;
-		if (dangerFieldB[blackKingPos.X - 1][blackKingPos.Y] == '*' || blackKingPos.X - 1 < 0) {
-			spareCounter++;
-		}
 	}
-	if (dangerFieldB[blackKingPos.X + 1][blackKingPos.Y] == '-' || dangerFieldB[blackKingPos.X + 1][blackKingPos.Y] == '*' || blackKingPos.X + 1 >= SIZE) {
+	if (dangerFieldB[blackKingPos.X + 1][blackKingPos.Y] == '-' || blackKingPos.X + 1 >= SIZE) {
 		counter++;
-		if (dangerFieldB[blackKingPos.X + 1][blackKingPos.Y] == '*' || blackKingPos.X + 1 >= SIZE) {
-			spareCounter++;
-		}
 	}
-	if (dangerFieldB[blackKingPos.X][blackKingPos.Y - 1] == '-' || dangerFieldB[blackKingPos.X][blackKingPos.Y - 1] == '*' || blackKingPos.Y - 1 < 0) {
+	if (dangerFieldB[blackKingPos.X][blackKingPos.Y - 1] == '-' || blackKingPos.Y - 1 < 0) {
 		counter++;
-		if (dangerFieldB[blackKingPos.X][blackKingPos.Y - 1] == '*' || blackKingPos.Y - 1 < 0) {
-			spareCounter++;
-		}
 	}
-	if (dangerFieldB[blackKingPos.X][blackKingPos.Y + 1] == '-' || dangerFieldB[blackKingPos.X][blackKingPos.Y + 1] == '*' || blackKingPos.Y + 1 >= SIZE) {
+	if (dangerFieldB[blackKingPos.X][blackKingPos.Y + 1] == '-' || blackKingPos.Y + 1 >= SIZE) {
 		counter++;
-		if (dangerFieldB[blackKingPos.X][blackKingPos.Y + 1] == '*' || blackKingPos.Y + 1 >= SIZE) {
-			spareCounter++;
-		}
 	}
 	/*cout << "                                         "<< n << m;*/
-	if (counter == spareCounter) {
-		return false;
-	}
 	if (counter == 8) {
 		return true;
 
@@ -835,7 +778,7 @@ void playerInput() {
 				   cout << "Not your turn or figure";
 			   }
 		   } else {
-			   cout << "You already choose some figure";
+			   cout << "You already choose some figure!";
 		   }
 		   break;
 	   case('p'):
@@ -1013,24 +956,10 @@ int main() {
 	bool endOfGameB = false;
 	while (endOfGameW !=true && endOfGameB != true) {
 		drawGameField();
-		
-		for (int i = 0; i < SIZE; i++) {
-			for (int j = 0; j < SIZE; j++) {
-				cout << dangerFieldB[i][j];
-			}
-			cout << "\n";
-		}
 		playerInput();
 		if (blackCheckMate(0)) {
 			isAnyPossibilitiesB();
-			/*canWeEatDangerB();*/
-			cout << "\n";
-			for (int i = 0; i < SIZE; i++) {
-				for (int j = 0; j < SIZE; j++) {
-					cout << dangerFieldB[i][j];
-				}
-				cout << "\n";
-			}
+			canWeEatDangerB();
 			system("pause");
 			if (blackCheckMate(1)) {
 				endOfGameB = true;
@@ -1042,7 +971,7 @@ int main() {
 		}
 		if (whiteCheckMate(0)) {
 			isAnyPossibilitiesW();
-			/*canWeEatDangerW();*/
+			canWeEatDangerW();
 			if (whiteCheckMate(1)) {
 				endOfGameW = true;
 			} else {
@@ -1051,30 +980,6 @@ int main() {
 				saveKing();
 			}
 		}
-		/*if (blackCheckMate()) {
-			int tryCounter = 0;
-			while (blackCheckMate() && tryCounter < 9) {
-				drawGameField();
-				cout << "Black king is in danger\n";
-				tryCounter = saveKing(tryCounter);
-				
-			}
-			if (tryCounter > 8) {
-				endOfGameB = true;
-			}
-		}
-		if (whiteCheckMate()) {
-			int tryCounter = 0;
-			while (whiteCheckMate() && tryCounter < 9) {
-				drawGameField();
-				cout << "White king is in danger\n";
-				tryCounter = saveKing(tryCounter);
-				
-			}
-			if (tryCounter > 8) {
-				endOfGameW = true;
-			}
-		}*/
 	}
 	/*wchar_t temp[] =L"π";
 	wchar_t temp2 = L'↑';
@@ -1096,3 +1001,12 @@ int main() {
 // Добавить условие окончания игры -> исправить условия окончания игры
 // Пофиксить канибализм среди чёрных пешек - !
 // Добавить, что короля съесть нельзя
+// Добавить рокировку
+// 
+/*cout << "\n";
+for (int i = 0; i < SIZE; i++) {
+	for (int j = 0; j < SIZE; j++) {
+		cout << dangerFieldB[i][j];
+	}
+	cout << "\n";
+}*/

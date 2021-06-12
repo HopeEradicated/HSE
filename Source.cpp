@@ -53,7 +53,7 @@ enum Teams {
 
 void drawCursor() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (Green << 4) | White);
-	cout << gameField[n][m];
+	cout << gameField[n][m] ;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (Black << 4) | White);
 	
 }
@@ -89,9 +89,19 @@ void drawGameField() {
 					else
 						drawCursor();
 				}
+				if (gameField[i][j] == '\0') {
+					cout << "q";
+				}
+				cout << " ";
 		}
-		cout << "\n";
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (Black << 4) | White);
+		cout << i+1 <<"\n";
 	}
+	char letters[SIZE] = { 'A','B','C','D','E','F','G','H' };
+	for (int i = 0; i < SIZE; i++) {
+		cout << letters[i] << " ";
+	}
+	cout << '\n';
 }
 
 void fillGameField(char mat[8][8]) {
@@ -176,6 +186,7 @@ bool isDifTeam(char fElem, char sElem) {
 	if (fElem == ' ' || sElem == ' ') {
 		return true;
 	}
+
 	char blackTeam[6] = { 'R','H','E','X','K','P' };
 	char whiteTeam[6] = { 1,30,87,24,'7','8' };
 	int counter = 0;
@@ -199,7 +210,7 @@ void markPossibleMoves(char mat[8][8], char output[8][8], COORD position, char e
 	if (element == 30 || element == 'P') {
 
 		if (temp.X == 1 || temp.X == 6) {
-			if (temp.X == 1) {
+			if (temp.X == 1 && element == 'P') {
 				if (isPeshkaCanMove == true) {
 					if (gameField[temp.X + 1][temp.Y] == ' ') {
 						output[temp.X + 1][temp.Y] = symbol;
@@ -217,7 +228,7 @@ void markPossibleMoves(char mat[8][8], char output[8][8], COORD position, char e
 				}
 			}
 
-			if (temp.X == 6) {
+			if (temp.X == 6 && element == 30) {
 				if (isPeshkaCanMove == true) {
 					if (gameField[temp.X - 1][temp.Y] == ' ') {
 						output[temp.X - 1][temp.Y] = symbol;
@@ -525,8 +536,8 @@ void playerCommands() {
 	}
 }
 
-bool whiteCheckMate(int style) {
-	if (style == 0) {
+bool whiteCheckMate() {
+	
 		clearGameField(dangerFieldW);
 		for (int i = 0; i < SIZE; i++) {
 			for (int j = 0; j < SIZE; j++) {
@@ -540,14 +551,18 @@ bool whiteCheckMate(int style) {
 					isPeshkaCanMove = true;
 					dangerFieldW[i][j] = '-';
 				}
-				else if (gameField[i][j] != ' ' && gameField[i][j] != 1) {
+			}
+		}
+	int counter = 0;
+	for (int i = 0; i < SIZE; i++) {
+		for (int j = 0; j < SIZE; j++) {
+			if (determineTeam(gameField[i][j]) == 0) {
+				if (gameField[i][j] != ' ' && gameField[i][j] != 1) {
 					dangerFieldW[i][j] = '*';
 				}
 			}
 		}
 	}
-	int counter = 0;
-	
 	if (dangerFieldW[whiteKingPos.X][whiteKingPos.Y] == '-') {
 		return true;
 	} 
@@ -584,8 +599,7 @@ bool whiteCheckMate(int style) {
 		return false;
 }
 
-bool blackCheckMate(int style) {
-	if (style == 0) {
+bool blackCheckMate() {
 		clearGameField(dangerFieldB);
 		for (int i = 0; i < SIZE; i++) {
 			for (int j = 0; j < SIZE; j++) {
@@ -601,19 +615,19 @@ bool blackCheckMate(int style) {
 				} 
 			}
 		}
-	}
 	for (int i = 0; i < SIZE; i++) {
 		for (int j = 0; j < SIZE; j++) {
-			if (gameField[i][j] != ' ' && gameField[i][j] != 'K') {
-				dangerFieldB[i][j] = '*';
+			if (determineTeam(gameField[i][j]) == 1) {
+				if (gameField[i][j] != ' ' && gameField[i][j] != 'K') {
+					dangerFieldB[i][j] = '*';
+				}
 			}
 		}
 	}
 	int counter = 0;
-	
 	if (dangerFieldB[blackKingPos.X][blackKingPos.Y] == '-') {
 		return true;
-	} 
+	}
 	if (dangerFieldB[blackKingPos.X - 1][blackKingPos.Y - 1] == '-' || blackKingPos.X - 1 < 0 || blackKingPos.Y - 1 < 0) {
 		counter++;
 	}
@@ -641,28 +655,55 @@ bool blackCheckMate(int style) {
 	/*cout << "                                         "<< n << m;*/
 	if (counter == 8) {
 		return true;
-
 	}
 	return false;
 
 }
 
-void isAnyPossibilitiesW() {
+bool isAnyPossibilitiesW() {
+	char temp[SIZE][SIZE] = { 0 };
+	char tempElem = ' ';
+	bool kingCanBeSaved = false;
 	for (int i = 0; i < SIZE; i++) {
 		for (int j = 0; j < SIZE; j++) {
 
 			if (determineTeam(gameField[i][j]) == 0) {
-				COORD tempPos;
-				tempPos.X = i;
-				tempPos.Y = j;
-				markPossibleMoves(gameField, dangerFieldW, tempPos, gameField[i][j], '*');
-				dangerFieldW[i][j] = '*';
+					COORD tempPos;
+					tempPos.X = i;
+					tempPos.Y = j;
+					markPossibleMoves(gameField, temp, tempPos, gameField[i][j], '*');
+					
+					for (int ia = 0; ia < SIZE; ia++) {
+						for (int ja = 0; ja < SIZE; ja++) {
+							if (temp[ia][ja] == '*') {
+								tempElem = gameField[ia][ja];
+								gameField[ia][ja] = gameField[i][j];
+								gameField[i][j] = ' ';
+								if (!whiteCheckMate()) {
+									gameField[i][j] = gameField[ia][ja];
+									gameField[ia][ja] = tempElem;
+									kingCanBeSaved = true;
+									break;
+								} 
+								gameField[i][j] = gameField[ia][ja];
+								gameField[ia][ja] = tempElem;
+							}
+						}
+					}
+					clearGameField(temp);
+			}
+			if (kingCanBeSaved == true) {
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
-void isAnyPossibilitiesB() {
+bool isAnyPossibilitiesB() {
+	char temp[SIZE][SIZE] = { 0 };
+	char tempElem = ' ';
+	bool kingCanBeSaved = false;
 	for (int i = 0; i < SIZE; i++) {
 		for (int j = 0; j < SIZE; j++) {
 
@@ -671,10 +712,32 @@ void isAnyPossibilitiesB() {
 				tempPos.X = i;
 				tempPos.Y = j;
 				markPossibleMoves(gameField, dangerFieldB, tempPos, gameField[i][j], '*');
-				dangerFieldW[i][j] = '*';
+			
+				for (int ia = 0; ia < SIZE; ia++) {
+					for (int ja = 0; ja < SIZE; ja++) {
+						if (temp[ia][ja] == '*') {
+							tempElem = gameField[ia][ja];
+							gameField[ia][ja] = gameField[i][j];
+							gameField[i][j] = ' ';
+							if (!blackCheckMate()) {
+								gameField[i][j] = gameField[ia][ja];
+								gameField[ia][ja] = tempElem;
+								kingCanBeSaved = true;
+								break;
+							}
+							gameField[i][j] = gameField[ia][ja];
+							gameField[ia][ja] = tempElem;
+						}
+					}
+				}
+				clearGameField(temp);
+			}
+			if (kingCanBeSaved == true) {
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 void canWeEatDangerW() {
@@ -756,7 +819,7 @@ void playerInput() {
 				   if (isNoPosMoves() == true) {
 					   cout << "No possible moves, chose another figure";
 					   swap(turnOfBlack, turnOfWhite);
-
+					   curFigure = ' ';
 				   }
 				  
 			   }
@@ -784,8 +847,16 @@ void playerInput() {
 	   case('p'):
 	   case('P'):
 		   if (movesField[n][m] == '-') {
-			   gameField[n][m] = gameField[posOfCurFigure.X][posOfCurFigure.Y];
-			   gameField[posOfCurFigure.X][posOfCurFigure.Y] = ' ';
+			   if (gameField[n][m] == 'K' || gameField[posOfCurFigure.X][posOfCurFigure.Y] == 'K' || gameField[n][m] == 1 || gameField[posOfCurFigure.X][posOfCurFigure.Y] == 1) {
+				   cout << "You can not eat the king!";
+			   } else {
+				   gameField[n][m] = gameField[posOfCurFigure.X][posOfCurFigure.Y];
+				   gameField[posOfCurFigure.X][posOfCurFigure.Y] = ' ';
+			   }
+			   /*if (gameField[n][m] == '\0') {
+				   gameField[n][m] = gameField[posOfCurFigure.X][posOfCurFigure.Y];
+				   gameField[posOfCurFigure.X][posOfCurFigure.Y] = ' ';
+			   }*/
 			   clearGameField(movesField);
 			   curFigure = ' ';
 			   if (gameField[n][m] == 1) {
@@ -804,6 +875,16 @@ void playerInput() {
 	   case('f'):
 		   n = 0;
 		   m = 0;
+		   break;
+	   case('q'):
+	   case('Q'):
+		   for (int i = 0; i < SIZE; i++) {
+			   for (int j = 0; j < SIZE; j++) {
+				   if (gameField[i][j] == '\0') {
+					   gameField[i][j] = ' ';
+				   }
+			   }
+		   }
 		   break;
 	   defult:
 		   cout << "Unknown input";
@@ -854,7 +935,8 @@ void saveKing() {
 				markPossibleMoves(gameField, movesField, posOfCurFigure, curFigure,'-');
 
 				if (isNoPosMoves() == true) {
-					cout << "No possible moves, chose another figure";
+					cout << "No possible moves, chose another figure!";
+					curFigure = ' ';
 				}
 
 			}
@@ -881,14 +963,15 @@ void saveKing() {
 	case('P'):
 		if (movesField[n][m] == '-') {
 			COORD oldKingpos;
-			if (blackCheckMate(0)) {
+			if (blackCheckMate()) {
 				oldKingpos = blackKingPos;
 			} else {
 				oldKingpos = whiteKingPos;
 			}
 			char save = gameField[n][m];
-			gameField[n][m] = gameField[posOfCurFigure.X][posOfCurFigure.Y];
-			gameField[posOfCurFigure.X][posOfCurFigure.Y] = ' ';
+			swap(gameField[n][m], gameField[posOfCurFigure.X][posOfCurFigure.Y]);
+			/*gameField[n][m] = gameField[posOfCurFigure.X][posOfCurFigure.Y];
+			gameField[posOfCurFigure.X][posOfCurFigure.Y] = ' ';*/
 			if (gameField[n][m] == 1) {
 				whiteKingPos.X = n;
 				whiteKingPos.Y = m;
@@ -897,10 +980,10 @@ void saveKing() {
 				blackKingPos.X = n;
 				blackKingPos.Y = m;
 			}
-			if (blackCheckMate(0) || whiteCheckMate(0)) {
+			if (blackCheckMate() || whiteCheckMate()) {
 				gameField[posOfCurFigure.X][posOfCurFigure.Y] = gameField[n][m];
 				gameField[n][m] = save;
-				if (blackCheckMate(0)) {
+				if (blackCheckMate()) {
 					blackKingPos = oldKingpos;
 				} else {
 					whiteKingPos = oldKingpos;
@@ -926,6 +1009,7 @@ void saveKing() {
 			cout << "You can not move figure there\n";
 		}
 		break;
+	
 	defult:
 		cout << "Unknown input";
 		break;
@@ -942,6 +1026,7 @@ int main() {
 		for (int j = 0; j < SIZE; j++) {
 			gameField[i][j] = ' ';
 			dangerFieldB[i][j] = ' ';
+			dangerFieldW[i][j] = ' ';
 		}
 	}
 	
@@ -956,12 +1041,20 @@ int main() {
 	bool endOfGameB = false;
 	while (endOfGameW !=true && endOfGameB != true) {
 		drawGameField();
+		cout << "\n";
+        for (int i = 0; i < SIZE; i++) {
+	     for (int j = 0; j < SIZE; j++) {
+		  cout << dangerFieldW[i][j];
+	     }
+	      cout << "\n";
+        }
 		playerInput();
-		if (blackCheckMate(0)) {
-			isAnyPossibilitiesB();
-			canWeEatDangerB();
-			system("pause");
-			if (blackCheckMate(1)) {
+		if (blackCheckMate()) {
+			
+			
+			/*canWeEatDangerB();*/
+			
+			if (isAnyPossibilitiesB()) {
 				endOfGameB = true;
 			} else {
 				drawGameField();
@@ -969,10 +1062,10 @@ int main() {
 				saveKing();
 			}
 		}
-		if (whiteCheckMate(0)) {
-			isAnyPossibilitiesW();
-			canWeEatDangerW();
-			if (whiteCheckMate(1)) {
+		if (whiteCheckMate()) {
+			
+			/*canWeEatDangerW();*/
+			if (!isAnyPossibilitiesW()) {
 				endOfGameW = true;
 			} else {
 				drawGameField();
@@ -998,11 +1091,12 @@ int main() {
 // Если фигура заблокирована добавить предупреждение и взможность выбрать другую фигуру - !
 // Пометка фигуры, которую может съесть игрок - !
 // Выделить в отдельную функцию ход повторяющийся для белых и чёрных
-// Добавить условие окончания игры -> исправить условия окончания игры
+// Добавить условие окончания игры -> исправить условия окончания игры - !
 // Пофиксить канибализм среди чёрных пешек - !
-// Добавить, что короля съесть нельзя
+// Добавить, что короля съесть нельзя-!
 // Добавить рокировку
-// 
+// Исправить баг дерьма!!
+// Король не ест наискосок
 /*cout << "\n";
 for (int i = 0; i < SIZE; i++) {
 	for (int j = 0; j < SIZE; j++) {

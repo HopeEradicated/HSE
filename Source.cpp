@@ -7,6 +7,7 @@
 #include <time.h>
 #include <wchar.h>
 
+
 using namespace std;
 #define SIZE  8
 #define SIZED 20
@@ -526,9 +527,12 @@ bool isNoPosMoves() {
 
 void playerCommands() {
 	char command[SIZED] = { 0 };
+	char help[SIZED][SIZED*3] = { "Marking of shapes (first white, then black):", "smiley face,K - kings","W,X - queens","up arrow,E - elephants","7,H -horses","8,R - rooks","triangle,P - pawns","To start the game write !play"}; 
 	cin >> command;
 	if (strcmp(command, "!help") == 0) {
-		cout << "no help\n";
+		for (int i = 0; i < 8; i++) {
+			cout << help[i] << "\n";
+		}
 	} else if (strcmp(command, "!play") == 0) {
 		waitingForStart++;
 	} else {
@@ -739,39 +743,6 @@ bool isAnyPossibilitiesB() {
 		}
 	}
 	return false;
-}
-
-void canWeEatDangerW() {
-	for (int i = 0; i < SIZE; i++) {
-		for (int j = 0; j < SIZE; j++) {
-			if (determineTeam(gameField[i][j]) == 1) {
-				if (dangerFieldB[i][j] == '*') {
-					COORD tempPos;
-					tempPos.X = i;
-					tempPos.Y = j;
-					markPossibleMoves(gameField, dangerFieldB, tempPos, gameField[i][j], '*');
-					dangerFieldW[i][j] = '*';
-				}
-			}
-		}
-	}
-}
-
-void canWeEatDangerB() {
-	for (int i = 0; i < SIZE; i++) {
-		for (int j = 0; j < SIZE; j++) {
-
-			if (determineTeam(gameField[i][j]) == 0) {
-				if (dangerFieldB[i][j] == '*') {
-					COORD tempPos;
-					tempPos.X = i;
-					tempPos.Y = j;
-					markPossibleMoves(gameField, dangerFieldW, tempPos, gameField[i][j], '*');
-					dangerFieldW[i][j] = '*';
-				}
-			}
-		}
-	}
 }
 
 void playerInput() {
@@ -1015,6 +986,7 @@ void saveKing() {
 }
 
 int main() {
+	
 	whiteKingPos.X = 7;
 	whiteKingPos.Y = 4;
 	blackKingPos.X = 0;
@@ -1038,13 +1010,6 @@ int main() {
 	bool endOfGameB = false;
 	while (endOfGameW !=true && endOfGameB != true) {
 		drawGameField();
-		cout << "\n";
-        for (int i = 0; i < SIZE; i++) {
-	     for (int j = 0; j < SIZE; j++) {
-		  cout << dangerFieldW[i][j];
-	     }
-	      cout << "\n";
-        }
 		playerInput();
 		if (blackCheckMate()) {
 			if (!turnOfBlack) {

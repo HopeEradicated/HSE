@@ -6,7 +6,6 @@
 #include <Windows.h>
 #include <time.h>
 #include <wchar.h>
-//#include <locale.h>
 
 using namespace std;
 #define SIZE  8
@@ -14,8 +13,9 @@ using namespace std;
 
 char gameField[SIZE][SIZE] = { 0 };
 char movesField[SIZE][SIZE] = { 0 };
-char dangerFieldW[SIZE][SIZE] = { 0 };
 char dangerFieldB[SIZE][SIZE] = { 0 };
+char dangerFieldW[SIZE][SIZE] = { 0 };
+
 
 char curFigure = ' ';
 COORD posOfCurFigure;
@@ -601,6 +601,7 @@ bool whiteCheckMate() {
 
 bool blackCheckMate() {
 		clearGameField(dangerFieldB);
+		
 		for (int i = 0; i < SIZE; i++) {
 			for (int j = 0; j < SIZE; j++) {
 
@@ -652,7 +653,7 @@ bool blackCheckMate() {
 	if (dangerFieldB[blackKingPos.X][blackKingPos.Y + 1] == '-' || blackKingPos.Y + 1 >= SIZE) {
 		counter++;
 	}
-	/*cout << "                                         "<< n << m;*/
+	
 	if (counter == 8) {
 		return true;
 	}
@@ -847,16 +848,13 @@ void playerInput() {
 	   case('p'):
 	   case('P'):
 		   if (movesField[n][m] == '-') {
-			   if (gameField[n][m] == 'K' || gameField[posOfCurFigure.X][posOfCurFigure.Y] == 'K' || gameField[n][m] == 1 || gameField[posOfCurFigure.X][posOfCurFigure.Y] == 1) {
+			   if (gameField[n][m] == 'K' || gameField[n][m] == 1 ) {
 				   cout << "You can not eat the king!";
 			   } else {
 				   gameField[n][m] = gameField[posOfCurFigure.X][posOfCurFigure.Y];
 				   gameField[posOfCurFigure.X][posOfCurFigure.Y] = ' ';
 			   }
-			   /*if (gameField[n][m] == '\0') {
-				   gameField[n][m] = gameField[posOfCurFigure.X][posOfCurFigure.Y];
-				   gameField[posOfCurFigure.X][posOfCurFigure.Y] = ' ';
-			   }*/
+			
 			   clearGameField(movesField);
 			   curFigure = ' ';
 			   if (gameField[n][m] == 1) {
@@ -969,9 +967,8 @@ void saveKing() {
 				oldKingpos = whiteKingPos;
 			}
 			char save = gameField[n][m];
-			swap(gameField[n][m], gameField[posOfCurFigure.X][posOfCurFigure.Y]);
-			/*gameField[n][m] = gameField[posOfCurFigure.X][posOfCurFigure.Y];
-			gameField[posOfCurFigure.X][posOfCurFigure.Y] = ' ';*/
+			gameField[n][m] = gameField[posOfCurFigure.X][posOfCurFigure.Y];
+			gameField[posOfCurFigure.X][posOfCurFigure.Y] = ' ';
 			if (gameField[n][m] == 1) {
 				whiteKingPos.X = n;
 				whiteKingPos.Y = m;
@@ -1050,11 +1047,11 @@ int main() {
         }
 		playerInput();
 		if (blackCheckMate()) {
-			
-			
-			/*canWeEatDangerB();*/
-			
-			if (isAnyPossibilitiesB()) {
+			if (!turnOfBlack) {
+				swap(turnOfBlack, turnOfWhite);
+			}
+				
+			if (!isAnyPossibilitiesB()) {
 				endOfGameB = true;
 			} else {
 				drawGameField();
@@ -1063,8 +1060,10 @@ int main() {
 			}
 		}
 		if (whiteCheckMate()) {
-			
-			/*canWeEatDangerW();*/
+			if (!turnOfWhite) {
+				swap(turnOfBlack, turnOfWhite);
+			}
+		
 			if (!isAnyPossibilitiesW()) {
 				endOfGameW = true;
 			} else {
@@ -1074,11 +1073,7 @@ int main() {
 			}
 		}
 	}
-	/*wchar_t temp[] =L"π";
-	wchar_t temp2 = L'↑';
-  
-	wcout << temp2 << "\n";
-	wcout <<temp<< "\n";*/
+
 	system("cls");
 	if (endOfGameB == true) {
 		cout << "White team wins!";

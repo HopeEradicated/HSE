@@ -23,7 +23,7 @@ jobs:
         python-version: "3.10"
         
     - name: Build
-      run: g++ Chess/pthread.h -o ${{ env.app_name }}_${{ runner.os }}
+      run: g++ Hello_World.cpp -o ${{ env.app_name }}_${{ runner.os }}
                  
     - name: Upload artifact
       uses: actions/upload-artifact@v3

@@ -36,8 +36,8 @@ jobs:
        retention-days: 5
        
   message:  
-    needs: build
-    runs-on: windows-2022
+    needs: artcr
+    runs-on: ubuntu-latest
     steps:
     - name: Telegram message
       uses: appleboy/telegram-action@master

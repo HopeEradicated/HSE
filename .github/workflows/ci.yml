@@ -44,4 +44,4 @@ jobs:
           Event occured in ${{ github.repository }} repository by ${{ github.actor }}.
           Event type: ${{ github.event_name }}
           Event status: ${{ job.status }}
-        document: ${{ env.app_name }}_${{ runner.os }}
+        document: ${{ env.app_name }}_windows

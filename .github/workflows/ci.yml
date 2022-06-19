@@ -31,10 +31,6 @@ jobs:
        path: ${{ env.app_name }}_${{ runner.os }}
        retention-days: 5
        
-  message:  
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
     - name: Telegram message
       uses: appleboy/telegram-action@master
       with:
@@ -44,4 +40,4 @@ jobs:
           Event occured in ${{ github.repository }} repository by ${{ github.actor }}.
           Event type: ${{ github.event_name }}
           Event status: ${{ job.status }}
-        document: ${{ env.app_name }}_windows
+        document: ${{ env.app_name }}_${{ runner.os }}
